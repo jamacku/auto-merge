@@ -1,4 +1,4 @@
-import { debug, getInput } from '@actions/core';
+import { debug, getInput, info } from '@actions/core';
 import { Bugzilla } from './bugzilla';
 import { Config } from './config';
 import { Controller } from './controller';
@@ -64,8 +64,10 @@ async function action(octokit, owner, repo, pr) {
         message.push(`🟢 Pull Request has correct target branch \`${pr.targetBranch}\``);
     }
     if (err.length == 0) {
+        info('merging pull request');
         const isMerged = await pr.merge();
         if (isMerged) {
+            info('pull request merged');
             await trackerController.adapter.addMergeComment(pr.title, pr.targetBranch, pr.url);
             message.push(`🟢 Pull Request was merged`);
             if (pr.currentLabels.includes(config.labels['manual-merge'])) {

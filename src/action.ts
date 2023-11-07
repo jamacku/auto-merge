@@ -1,4 +1,4 @@
-import { debug, getInput } from '@actions/core';
+import { debug, getInput, info } from '@actions/core';
 
 import { Bugzilla } from './bugzilla';
 import { Config } from './config';
@@ -120,9 +120,11 @@ async function action(
   }
 
   if (err.length == 0) {
+    info('merging pull request');
     const isMerged = await pr.merge();
 
     if (isMerged) {
+      info('pull request merged');
       await trackerController.adapter.addMergeComment(
         pr.title,
         pr.targetBranch,

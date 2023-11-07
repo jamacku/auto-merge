@@ -90496,8 +90496,10 @@ async function action(octokit, owner, repo, pr) {
         message.push(`🟢 Pull Request has correct target branch \`${pr.targetBranch}\``);
     }
     if (err.length == 0) {
+        (0,core.info)('merging pull request');
         const isMerged = await pr.merge();
         if (isMerged) {
+            (0,core.info)('pull request merged');
             await trackerController.adapter.addMergeComment(pr.title, pr.targetBranch, pr.url);
             message.push(`🟢 Pull Request was merged`);
             if (pr.currentLabels.includes(config.labels['manual-merge'])) {
